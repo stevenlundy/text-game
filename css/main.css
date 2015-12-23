@@ -92,19 +92,37 @@ textarea {
 /* ==========================================================================
    Author's custom styles
    ========================================================================== */
+body {
+  background: #bbb;
+}
 
+.container {
+  width: 600px;
+  margin: auto;
+}
 
-
-
-
-
-
-
-
-
-
-
-
+pre#scroller{
+  color: orange;
+  cursor: text;
+  background-color: black;
+  height: 200px;
+  overflow-y: scroll;
+  vertical-align: bottom;
+  width: 600px;
+}
+#console-input {
+  color: orange;
+  background-color: transparent;
+  border: none;
+  width: 550px;
+  font-family: "Courier New", Courier, monospace;
+  outline: none;
+  padding: 0;
+}
+#picture {
+  height: 400px;
+  width: 600px;
+}
 
 
 
