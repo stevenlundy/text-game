@@ -46,34 +46,29 @@ Room.prototype.take = function(params){
 Room.prototype.pick = Room.prototype.take;
 Room.prototype.grab = Room.prototype.take;
 
-Room.prototype.hasArticle = function (article){
-  for(var i = 0; i < this.articles.length; i++){
-    if(this.articles[i].name === article){
-      return true;
-    }
-  }
-  return false;
+Room.prototype.hasArticle = function (articleName){
+  return this.articles.some(function(article) {
+    return article.name === articleName;
+  });
 }
-Room.prototype.getArticle = function (article){
+Room.prototype.getArticle = function (articleName){
   for(var i = 0; i < this.articles.length; i++){
-    if(this.articles[i].name === article){
+    if(this.articles[i].name === articleName){
       return this.articles[i];
     }
   }
   return -1;
 }
-Room.prototype.deleteArticle = function (article) {
+Room.prototype.deleteArticle = function (articleName) {
   for(var i = 0; i < this.articles.length; i++){
-    if(this.articles[i].name === article){
+    if(this.articles[i].name === articleName){
       this.articles.splice(i,1);
+      break;
     }
   }
 }
 Room.prototype.hasAction = function (action) {
-  if(this.actions.indexOf(action) !== -1){
-  	return true;
-  }
-  return false;
+  return this.actions.indexOf(action) !== -1;
 }
 Room.prototype.setPicture = function(image) {
   var el = document.getElementById("picture");

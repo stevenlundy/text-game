@@ -138,12 +138,9 @@ function evaluate(input){
 // Start Game
 var player = {};
 player.inventory = [];
-player.hasArticle = function (article){
-  for(var i = 0; i <this.inventory.length; i++){
-    if(this.inventory[i].name === article){
-      return true;
-    }
-  }
-  return false;
+player.hasArticle = function (articleName){
+  return this.inventory.some(function(article) {
+    return article.name === articleName;
+  });
 }
 var currentRoom = rooms["Living Room"];
