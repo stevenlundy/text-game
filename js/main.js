@@ -8,7 +8,7 @@ $( document ).ready(function() {
   $('#scroller').click(function() {
     $('#console-input').focus();
   });
-  $('#console-input').bind("enterKey",function(e){
+  $('#console-input').bind("enterKey",function(e) {
     var value = $('#console-input').val();
     print(value);
     evaluate(value);
@@ -17,7 +17,7 @@ $( document ).ready(function() {
     currentCmd = consoleHistory.length;
     tempCmd = "";
   });
-  $('#console-input').bind("prevCmd",function(e){
+  $('#console-input').bind("prevCmd",function(e) {
     if(currentCmd === 0){
     }
     if(currentCmd >= consoleHistory.length){
@@ -28,17 +28,17 @@ $( document ).ready(function() {
     }
     $('#console-input').val(consoleHistory[currentCmd]);
   });
-  $('#console-input').bind("nextCmd",function(e){
+  $('#console-input').bind("nextCmd",function(e) {
     currentCmd++;
     if(currentCmd > consoleHistory.length){
       currentCmd = consoleHistory.length;
-    } else if(currentCmd === consoleHistory.length){
+    } else if(currentCmd === consoleHistory.length) {
       $('#console-input').val(tempCmd);
-    } else if(currentCmd >=0){
+    } else if(currentCmd >=0) {
       $('#console-input').val(consoleHistory[currentCmd]);
     }
   });
-  $('#console-input').keyup(function(e){
+  $('#console-input').keyup(function(e) {
     if(e.keyCode == 13) { // enter
       $(this).trigger("enterKey");
     }
@@ -51,14 +51,23 @@ $( document ).ready(function() {
   });
 });
 
-function print (output){
-  output = setParagraphWidth(output, 60, "   ");
-  $("#console").append(">> "+output+"\n");
-  var box = document.getElementById("scroller");
+function print (output) {
+  var promptString = '>> '
+  output = setParagraphWidth(output, 60, repeatChar(' ', promptString.length));
+  $('#console').append(promptString + output + '\n');
+  var box = document.getElementById('scroller');
   box.scrollTop = box.scrollHeight;
 }
 
-function setParagraphWidth(text, width, indent){
+function repeatChar (char, repetitions) {
+  var output = '';
+  for (var i = 0; i < repetitions; i++) {
+    output += char;
+  }
+  return output;
+}
+
+function setParagraphWidth(text, width, indent) {
   if(text.length <= width){
     return text;
   }
@@ -76,7 +85,41 @@ function setParagraphWidth(text, width, indent){
   return newText;
 }
 
-function evaluate(input){
+function addIndefiniteArticle (word) {
+  if(isPlural(word)){
+    return word;
+  } else if (isVowel(word[0])) {
+    return 'an ' + word;
+  } else {
+    return 'a ' + word;
+  }
+}
+
+function isVowel (char) {
+  var vowels = ['a','e','i','o','u'];
+  return vowels.indexOf(char) > -1;
+}
+
+function isPlural (word) {
+  word = word.toLowerCase();
+  //exceptions
+  var pluralWords = [/^mice$/, /^women$/, /^children$/, /^men$/, /^people$/, /^feet$/, /^data&/, /^dice$/, /ia$/];
+  var singularWords = [/sis$/, /us$/];
+
+  if(pluralWords.some(function(pattern) {
+    return !!(word.match(pattern));
+  })) {
+    return true;
+  } else if(singularWords.some(function(pattern) {
+    return !!(word.match(pattern));
+  })) {
+    return false;
+  } else {
+    return !!(word.match(/s$/));
+  }
+}
+
+function evaluate(input) {
   if(input === ""){
     return;
   }

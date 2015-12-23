@@ -15,7 +15,7 @@ Room.prototype.look = function(params){
       print('Going ' + params.directions[i] + ' leads to the ' + this.directions[params.directions[i]].name + '.');
     }
   } else if (params.other.length > 0) {
-    print('I don\'t see a ' + params.other[0]);
+    print('I don\'t see ' + addIndefiniteArticle(params.other[0]));
 
   } else {
     this.setPicture(this.picture);
