@@ -2,9 +2,9 @@ $( document ).ready(function() {
   var consoleHistory = [];
   var tempCmd = "";
   var currentCmd = 0;
-  
-  currentRoom.look();
-  
+
+  currentRoom.look({articles: [], directions: [], other: []});
+
   $('#scroller').click(function() {
     $('#console-input').focus();
   });
@@ -36,7 +36,7 @@ $( document ).ready(function() {
       $('#console-input').val(tempCmd);
     } else if(currentCmd >=0){
       $('#console-input').val(consoleHistory[currentCmd]);
-    }    
+    }
   });
   $('#console-input').keyup(function(e){
     if(e.keyCode == 13) { // enter
@@ -72,7 +72,7 @@ function setParagraphWidth(text, width, indent){
     }
   }
   newText += text.substring(lineStart, i);
-  
+
   return newText;
 }
 
@@ -83,24 +83,24 @@ function evaluate(input){
   var articles = [];
   var actions = [];
   var directions = [];
-  
+  var other = []
+
   // Pull out actions and articles from input
   input = input.split(" ");
   for(var i = 0; i<input.length; i++){
     if(currentRoom.hasArticle(input[i])){
       articles.push(input[i]);
-    }
-    if(currentRoom.hasAction(input[i])){
-      actions.push(input[i]);      
-    }
-    if(currentRoom.directions.hasOwnProperty(input[i])){
-      directions.push(input[i]);
-    }
-    if(player.hasArticle(input[i])){
+    } else if(currentRoom.hasAction(input[i])){
       actions.push(input[i]);
+    } else if(currentRoom.directions.hasOwnProperty(input[i])){
+      directions.push(input[i]);
+    } else if(player.hasArticle(input[i])){
+      actions.push(input[i]);
+    } else {
+      other.push(input[i]);
     }
   }
-  
+
   if(actions.length === 0){ // No Action provided
     if(input.length === articles.length ){ // Each input is an article
       if (input.length === 1){ // One article
@@ -114,20 +114,24 @@ function evaluate(input){
         console.log(currentRoom);
         currentRoom = currentRoom.directions[directions[0]];
         console.log(currentRoom);
-        currentRoom.look();
+        currentRoom.look({articles: [], directions: [], other: []});
       } else {
         print("Let's go to one place at a time.")
       }
     } else {
-      print("I don't think I can "+input.join(" "))+".";      
+      print("I don't think I can "+input.join(" "))+".";
     }
   }
   else if(actions.length === 1){ // One action provided
     var action = currentRoom[actions[0]];
-    action.apply(currentRoom, articles);
+    action.call(currentRoom, {
+      articles: articles,
+      directions: directions,
+      other: other
+    });
   }
   else { // Multiple actions provided
-    print("I don't understand what you mean.");    
+    print("I don't understand what you mean.");
   }
 }
 
